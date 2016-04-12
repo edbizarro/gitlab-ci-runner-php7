@@ -10,6 +10,7 @@ RUN apt-get update && \
     git \
     unzip \
     zlib1g-dev \
+    libxml2-dev \
   && rm -r /var/lib/apt/lists/*
 
 # PHP Extensions
