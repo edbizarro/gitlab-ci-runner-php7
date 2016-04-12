@@ -9,6 +9,7 @@ RUN apt-get update && \
     curl \
     git \
     unzip \
+    zlib \
   && rm -r /var/lib/apt/lists/*
 
 # PHP Extensions
