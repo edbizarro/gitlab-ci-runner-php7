@@ -46,7 +46,8 @@ WORKDIR /tmp
 
 # Run composer and phpunit installation.
 RUN composer selfupdate && \
-    composer require "phpunit/phpunit:4.8.23" --prefer-source --no-interaction && \
+    composer global require hirak/prestissimo \
+    composer require "phpunit/phpunit:^5.3" --prefer-source --no-interaction && \
     ln -s /tmp/vendor/bin/phpunit /usr/local/bin/phpunit
 
 RUN composer --version
