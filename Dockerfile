@@ -41,12 +41,13 @@ RUN php --version
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     
+RUN composer global require "hirak/prestissimo:^0.1"
+
 # Goto temporary directory.
 WORKDIR /tmp
 
 # Run composer and phpunit installation.
 RUN composer selfupdate && \
-    composer global require "hirak/prestissimo:^0.1" --no-interaction && \
     composer require "phpunit/phpunit:^5.3" --prefer-dist --no-interaction && \
     ln -s /tmp/vendor/bin/phpunit /usr/local/bin/phpunit
 
