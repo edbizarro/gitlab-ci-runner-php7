@@ -4,6 +4,7 @@ RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
     libbz2-dev \
     libcurl4-openssl-dev \
+    libmcrypt \
     php-pear \
     curl \
     git \
