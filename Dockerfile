@@ -36,9 +36,6 @@ VOLUME /root/composer
 # Environmental Variables
 ENV COMPOSER_HOME /root/composer
 
-# Display PHP version
-RUN php --version
-
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
     
