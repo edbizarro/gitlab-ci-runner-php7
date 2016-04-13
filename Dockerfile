@@ -11,6 +11,7 @@ RUN apt-get update && \
     unzip \
     zlib1g-dev \
     libxml2-dev \
+    php-ssh2 \
   && rm -r /var/lib/apt/lists/*
 
 # PHP Extensions
