@@ -12,13 +12,15 @@ RUN apt-get update && \
     zlib1g-dev \
     libxml2-dev \
     libssh2-1 \
-    libssh2-1-dev 
-    php-ssh2 \
+    libssh2-1-dev \
+    php-pear \
 
   && rm -r /var/lib/apt/lists/*
 
 # PHP Extensions
 RUN docker-php-ext-install mcrypt zip xml mbstring curl json pdo_mysql tokenizer
+
+RUN pecl install -f ssh2
   
   # Run xdebug installation.
 RUN curl -L https://xdebug.org/files/xdebug-2.4.0rc4.tgz >> /usr/src/php/ext/xdebug.tgz && \
