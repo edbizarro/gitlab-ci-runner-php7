@@ -72,7 +72,6 @@ RUN curl -L http://deployer.org/deployer.phar -o deployer.phar
 RUN mv deployer.phar /usr/local/bin/dep
 RUN chmod +x /usr/local/bin/dep
 RUN dep self-update
-
-RUN deb --help
+RUN chmod +x /usr/local/bin/dep
 
 RUN echo $PROD_HOST_KEY > ~/.ssh/known_hosts
