@@ -1,37 +1,48 @@
-FROM php:7
+FROM ubuntu:14.04
+
 MAINTAINER Eduardo Bizarro <edbizarro@gmail.com>
-RUN apt-get update && \
-  DEBIAN_FRONTEND=noninteractive apt-get install -y \
-    libbz2-dev \
-    libcurl4-openssl-dev \
-    libmcrypt-dev \
-    php-pear \
+
+# Set correct environment variables
+ENV HOME /root
+
+# Ensure UTF-8
+RUN locale-gen en_US.UTF-8
+ENV LANG       en_US.UTF-8
+ENV LC_ALL     en_US.UTF-8
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y \
+    software-properties-common \
+    python-software-properties \
     curl \
     git \
-    unzip \
-    zlib1g-dev \
-    libxml2-dev \
-    libssh2-1 \
-    libssh2-1-dev \
-    php-pear \
+    unzip \    
+    mcrypt \
+    wget \
 
-  && rm -r /var/lib/apt/lists/*
+    && apt-get --purge autoremove
+
+RUN DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:ondrej/php
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get update
 
 # PHP Extensions
-RUN docker-php-ext-install mcrypt zip xml mbstring curl json pdo_mysql tokenizer
+RUN apt-get install -y php7.0-dev php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli
 
-RUN pecl install -f ssh2
-  
-  # Run xdebug installation.
-RUN curl -L https://xdebug.org/files/xdebug-2.4.0rc4.tgz >> /usr/src/php/ext/xdebug.tgz && \
-    tar -xf /usr/src/php/ext/xdebug.tgz -C /usr/src/php/ext/ && \
-    rm /usr/src/php/ext/xdebug.tgz && \
-    docker-php-ext-install xdebug-2.4.0RC4 && \
-    docker-php-ext-install pcntl && \
-    php -m
+# Run xdebug installation.
+RUN wget https://xdebug.org/files/xdebug-2.4.0rc4.tgz && \
+    tar -xzf xdebug-2.4.0rc4.tgz && \
+    rm xdebug-2.4.0rc4.tgz && \
+    cd xdebug-2.4.0RC4 && \
+    phpize && \
+    ./configure --enable-xdebug && \
+    make && \
+    cp modules/xdebug.so /usr/lib/. && \
+    echo 'zend_extension="/usr/lib/xdebug.so"' > /etc/php/7.0/cli/conf.d/20-xdebug.ini && \
+    echo 'xdebug.remote_enable=1' >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
   
 # Memory Limit
-RUN echo "memory_limit=-1" > $PHP_INI_DIR/conf.d/memory-limit.ini
+#RUN echo "memory_limit=-1" > $PHP_INI_DIR/conf.d/memory-limit.ini
 
 # Time Zone
 #RUN echo "date.timezone=Europe/Amsterdam" > $PHP_INI_DIR/conf.d/date_timezone.ini
