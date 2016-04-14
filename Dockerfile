@@ -12,7 +12,8 @@ RUN apt-get update && \
     zlib1g-dev \
     libxml2-dev \
     libssh2-1 \
-    libssh2-1-dev \
+    libssh2-1-dev 
+    php-ssh2 \
 
   && rm -r /var/lib/apt/lists/*
 
