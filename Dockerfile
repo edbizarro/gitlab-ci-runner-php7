@@ -17,7 +17,7 @@ RUN apt-get update && \
   && rm -r /var/lib/apt/lists/*
 
 # PHP Extensions
-RUN docker-php-ext-install mcrypt zip xml mbstring curl json pdo_mysql tokenizer dev
+RUN docker-php-ext-install mcrypt zip xml mbstring curl json pdo_mysql tokenizer
   
   # Run xdebug installation.
 RUN curl -L https://xdebug.org/files/xdebug-2.4.0rc4.tgz >> /usr/src/php/ext/xdebug.tgz && \
