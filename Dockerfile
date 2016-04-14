@@ -74,4 +74,5 @@ RUN chmod +x /usr/local/bin/dep
 RUN dep self-update
 RUN chmod +x /usr/local/bin/dep
 
+RUN mkdir ~/.ssh
 RUN echo $PROD_HOST_KEY > ~/.ssh/known_hosts
