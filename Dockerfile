@@ -2,6 +2,9 @@ FROM phusion/baseimage:0.9.16
 
 MAINTAINER Eduardo Bizarro <edbizarro@gmail.com>
 
+# Use baseimage-docker's init system.
+CMD ["/sbin/my_init"]
+
 # Set correct environment variables
 ENV HOME /root
 
