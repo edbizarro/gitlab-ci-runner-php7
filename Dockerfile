@@ -20,7 +20,7 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     mcrypt \
     wget \
 
-    && apt-get --purge autoremove
+    && apt-get --purge autoremove -y
 
 RUN DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:ondrej/php
 
