@@ -22,11 +22,17 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     unzip \    
     mcrypt \
     wget \
+    openssl \
+    autoconf \
+    g++ \
+    make \
+    libssl-dev \
+    libcurl4-openssl-dev \
+    php-pear \
 
     && apt-get --purge autoremove -y
 
 RUN DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:ondrej/php
-
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 
 # PHP Extensions
@@ -76,3 +82,14 @@ RUN mv deployer.phar /usr/local/bin/dep
 RUN chmod +x /usr/local/bin/dep
 RUN dep self-update
 RUN chmod +x /usr/local/bin/dep
+
+# MONGODB
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 7F0CEB10 && \
+    echo "deb http://repo.mongodb.org/apt/ubuntu "$(lsb_release -sc)"/mongodb-org/3.2 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-3.2.list && \
+    apt-get update && \
+    apt-get install -y --force-yes pwgen mongodb-org
+
+RUN pecl install mongodb
+RUN echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+
+RUN service php7.0-fpm restart
