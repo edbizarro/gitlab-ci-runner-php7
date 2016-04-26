@@ -36,7 +36,7 @@ RUN DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:ondrej/php
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 
 # PHP Extensions
-RUN apt-get install -y php7.0-dev php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli
+RUN apt-get install -y php7.0-dev php7.0-fpm php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli
 
 # Run xdebug installation.
 RUN wget https://xdebug.org/files/xdebug-2.4.0rc4.tgz && \
