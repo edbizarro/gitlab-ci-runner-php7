@@ -81,8 +81,8 @@ RUN chmod +x /usr/local/bin/dep
 RUN dep self-update
 RUN chmod +x /usr/local/bin/dep
 
-RUN pecl install mongodb
-RUN echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+#RUN pecl install mongodb
+#RUN echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
 
 RUN service php7.0-fpm restart
 
