@@ -14,12 +14,15 @@ ENV LANG       en_US.UTF-8
 ENV LC_ALL     en_US.UTF-8
 
 RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
+    DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y && \
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     software-properties-common \
     python-software-properties \
+    build-essential \
     curl \
     git \
-    unzip \    
+    unzip \
     mcrypt \
     wget \
     openssl \
@@ -28,15 +31,21 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     make \
     libssl-dev \
     libcurl4-openssl-dev \
-    php-pear \
-
+    libsasl2-dev \
+    --no-install-recommends && rm -r /var/lib/apt/lists/* \
     && apt-get --purge autoremove -y
 
 RUN DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:ondrej/php
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 
 # PHP Extensions
-RUN apt-get install -y php7.0-dev php7.0-fpm php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli
+RUN apt-get install -y php-pear php7.0-dev php7.0-fpm php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli
+
+RUN pecl install mongodb
+
+RUN echo "extension=mongodb.so" > /etc/php/7.0/fpm/conf.d/20-mongodb.ini && \
+	echo "extension=mongodb.so" > /etc/php/7.0/cli/conf.d/20-mongodb.ini && \
+	echo "extension=mongodb.so" > /etc/php/7.0/mods-available/mongodb.ini
 
 # Run xdebug installation.
 RUN wget https://xdebug.org/files/xdebug-2.4.0rc4.tgz && \
@@ -49,7 +58,7 @@ RUN wget https://xdebug.org/files/xdebug-2.4.0rc4.tgz && \
     cp modules/xdebug.so /usr/lib/. && \
     echo 'zend_extension="/usr/lib/xdebug.so"' > /etc/php/7.0/cli/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_enable=1' >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
-  
+
 # Memory Limit
 #RUN echo "memory_limit=-1" > $PHP_INI_DIR/conf.d/memory-limit.ini
 
@@ -63,7 +72,7 @@ ENV COMPOSER_HOME /root/composer
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-    
+
 RUN /usr/local/bin/composer global require hirak/prestissimo
 
 # Goto temporary directory.
@@ -71,7 +80,7 @@ WORKDIR /tmp
 
 # Run composer and phpunit installation.
 RUN composer selfupdate && \
-    composer require "phpunit/phpunit:^5.3" --prefer-dist --no-interaction && \
+    composer require "phpunit/phpunit" --prefer-dist --no-interaction && \
     ln -s /tmp/vendor/bin/phpunit /usr/local/bin/phpunit && \
     rm -rf /root/.composer/cache/*
 
@@ -81,8 +90,11 @@ RUN chmod +x /usr/local/bin/dep
 RUN dep self-update
 RUN chmod +x /usr/local/bin/dep
 
-#RUN pecl install mongodb
-#RUN echo "extension=mongodb.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+RUN mkdir -p /usr/local/openssl/include/openssl/ && \
+    ln -s /usr/include/openssl/evp.h /usr/local/openssl/include/openssl/evp.h && \
+    mkdir -p /usr/local/openssl/lib/ && \
+    ln -s /usr/lib/x86_64-linux-gnu/libssl.a /usr/local/openssl/lib/libssl.a && \
+    ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/local/openssl/lib/
 
 RUN service php7.0-fpm restart
 
