@@ -38,6 +38,12 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 RUN DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:ondrej/php
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 
+#NODE JS
+RUN curl -sL https://deb.nodesource.com/setup_4.x | sudo bash -
+RUN sudo apt-get install nodejs -qq
+RUN sudo npm install -g npm
+RUN sudo npm install -g gulp
+
 # PHP Extensions
 RUN apt-get install -y php-pear php7.0-dev php7.0-fpm php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli
 
