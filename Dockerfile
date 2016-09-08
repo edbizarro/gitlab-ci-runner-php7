@@ -39,7 +39,7 @@ RUN DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:ondrej/php
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 
 #NODE JS
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
+RUN curl -sL https://deb.nodesource.com/setup_4.x | sudo bash -
 RUN sudo apt-get install nodejs -qq
 RUN sudo npm install -g npm
 RUN sudo npm install -g gulp
