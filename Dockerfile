@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.9.18
+FROM phusion/baseimage:0.9.19
 
 MAINTAINER Eduardo Bizarro <edbizarro@gmail.com>
 
@@ -38,20 +38,23 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
 RUN DEBIAN_FRONTEND=noninteractive add-apt-repository -y ppa:ondrej/php
 RUN DEBIAN_FRONTEND=noninteractive apt-get update
 
-#NODE JS
-RUN curl -sL https://deb.nodesource.com/setup_6.x | sudo bash -
-RUN sudo apt-get install nodejs -qq
-RUN sudo npm install -g npm
-RUN sudo npm install -g gulp
+# NODE JS
+RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+    apt-get install nodejs -qq && \
+    npm install -g gulp
+
+# YARN
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
 # PHP Extensions
 RUN apt-get install -y php-pear php7.0-dev php7.0-fpm php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli
+RUN apt-get remove --purge php5 php5-common
 
 RUN pecl install mongodb
 
 RUN echo "extension=mongodb.so" > /etc/php/7.0/fpm/conf.d/20-mongodb.ini && \
-	echo "extension=mongodb.so" > /etc/php/7.0/cli/conf.d/20-mongodb.ini && \
-	echo "extension=mongodb.so" > /etc/php/7.0/mods-available/mongodb.ini
+    echo "extension=mongodb.so" > /etc/php/7.0/cli/conf.d/20-mongodb.ini && \
+    echo "extension=mongodb.so" > /etc/php/7.0/mods-available/mongodb.ini
 
 # Run xdebug installation.
 RUN wget https://xdebug.org/files/xdebug-2.4.0rc4.tgz && \
@@ -65,11 +68,9 @@ RUN wget https://xdebug.org/files/xdebug-2.4.0rc4.tgz && \
     echo 'zend_extension="/usr/lib/xdebug.so"' > /etc/php/7.0/cli/conf.d/20-xdebug.ini && \
     echo 'xdebug.remote_enable=1' >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
 
-# Memory Limit
-#RUN echo "memory_limit=-1" > $PHP_INI_DIR/conf.d/memory-limit.ini
-
 # Time Zone
-#RUN echo "date.timezone=Europe/Amsterdam" > $PHP_INI_DIR/conf.d/date_timezone.ini
+RUN echo "date.timezone=America/Sao_Paulo" > /etc/php/7.0/cli/conf.d/date_timezone.ini && \
+    echo "date.timezone=America/Sao_Paulo" > /etc/php/7.0/fpm/conf.d/date_timezone.ini
 
 VOLUME /root/composer
 
@@ -78,8 +79,7 @@ ENV COMPOSER_HOME /root/composer
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-RUN /usr/local/bin/composer global require hirak/prestissimo
+RUN /usr/local/bin/composer global require hirak/prestissimo --prefer-dist --no-interaction
 
 # Goto temporary directory.
 WORKDIR /tmp
@@ -90,11 +90,10 @@ RUN composer selfupdate && \
     ln -s /tmp/vendor/bin/phpunit /usr/local/bin/phpunit && \
     rm -rf /root/.composer/cache/*
 
-RUN curl -L http://deployer.org/deployer.phar -o deployer.phar
-RUN mv deployer.phar /usr/local/bin/dep
-RUN chmod +x /usr/local/bin/dep
-RUN dep self-update
-RUN chmod +x /usr/local/bin/dep
+RUN curl -L http://deployer.org/deployer.phar -o deployer.phar && \
+    mv deployer.phar /usr/local/bin/dep && \
+    chmod +x /usr/local/bin/dep && \
+    dep self-update
 
 RUN mkdir -p /usr/local/openssl/include/openssl/ && \
     ln -s /usr/include/openssl/evp.h /usr/local/openssl/include/openssl/evp.h && \
@@ -104,4 +103,4 @@ RUN mkdir -p /usr/local/openssl/include/openssl/ && \
 
 RUN service php7.0-fpm restart
 
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get clean && apt-get autoremove && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
