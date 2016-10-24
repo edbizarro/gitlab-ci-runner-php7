@@ -1,11 +1,13 @@
-# gitlab-ci-runner-php7
+# GitLab CI PHP runner
 
 [![](https://images.microbadger.com/badges/version/edbizarro/gitlab-ci-runner-php7.svg)](http://microbadger.com/images/edbizarro/gitlab-ci-runner-php7 "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/edbizarro/gitlab-ci-runner-php7.svg)](http://microbadger.com/images/edbizarro/gitlab-ci-runner-php7 "Get your own image badge on microbadger.com")
 
 
-Image:
+## Based on Ubuntu 16.04
 
-- PHP 7.0: fpm, mcrypt, mongo, xdebug, zip, xml, mbstring, curl, json, mysql and tokenizer extensions
-- Composer
-- Deployer
+### This image contains:
+
+- PHP 7.0 with: fpm, mcrypt, mongo, xdebug, zip, xml, mbstring, curl, json, mysql and tokenizer extensions
+- [Composer](https://getcomposer.org/)
+- [Deployer](https://github.com/deployphp/deployer)
 - Node / NPM / Gulp
