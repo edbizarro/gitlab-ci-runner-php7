@@ -2,9 +2,6 @@ FROM ubuntu:16.04
 
 MAINTAINER Eduardo Bizarro <edbizarro@gmail.com>
 
-# Use baseimage-docker's init system.
-#CMD ["/sbin/my_init"]
-
 # Set correct environment variables
 ENV HOME /root
 
@@ -29,10 +26,6 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
     autoconf \
     g++ \
     make \
-    # libssl-dev \
-    # libcurl4-openssl-dev \
-    # libsasl2-dev \
-    # libcurl3 \
     --no-install-recommends && rm -r /var/lib/apt/lists/* \
     && apt-get --purge autoremove -y
 
@@ -55,12 +48,11 @@ RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
 RUN add-apt-repository -y ppa:ondrej/php && \
     DEBIAN_FRONTEND=noninteractive apt-get update && \
-    apt-get install -y -qq php-pear php7.0-dev php7.0-fpm php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli php7.0-imap && \
-    apt-get remove --purge php5 php5-common
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq php-pear php7.0-dev php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli php7.0-imap && \
+    DEBIAN_FRONTEND=noninteractive apt-get remove --purge php5 php5-common
 
 # MONGO extension
 RUN pecl install mongodb && \
-    echo "extension=mongodb.so" > /etc/php/7.0/fpm/conf.d/20-mongodb.ini && \
     echo "extension=mongodb.so" > /etc/php/7.0/cli/conf.d/20-mongodb.ini && \
     echo "extension=mongodb.so" > /etc/php/7.0/mods-available/mongodb.ini
 
@@ -77,8 +69,7 @@ RUN wget --no-check-certificate https://xdebug.org/files/xdebug-2.4.0rc4.tgz && 
     echo 'xdebug.remote_enable=1' >> /etc/php/7.0/cli/conf.d/20-xdebug.ini
 
 # Time Zone
-RUN echo "date.timezone=America/Sao_Paulo" > /etc/php/7.0/cli/conf.d/date_timezone.ini && \
-    echo "date.timezone=America/Sao_Paulo" > /etc/php/7.0/fpm/conf.d/date_timezone.ini
+RUN echo "date.timezone=America/Sao_Paulo" > /etc/php/7.0/cli/conf.d/date_timezone.ini
 
 VOLUME /root/composer
 
@@ -98,11 +89,4 @@ RUN composer selfupdate && \
     ln -s /tmp/vendor/bin/phpunit /usr/local/bin/phpunit && \
     rm -rf /root/.composer/cache/*
 
-# Deployer
-RUN curl -L http://deployer.org/deployer.phar -o deployer.phar && \
-    mv deployer.phar /usr/local/bin/dep && \
-    chmod +x /usr/local/bin/dep
-
-RUN service php7.0-fpm restart
-
-RUN apt-get clean && apt-get autoremove && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get clean -y && apt-get --purge autoremove -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
