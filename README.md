@@ -7,7 +7,7 @@
 
 ### This image contains:
 
-- PHP 7.0 with: fpm, mcrypt, mongo, xdebug, zip, xml, mbstring, curl, json, mysql and tokenizer extensions
+- PHP 7.0 with: ```mcrypt```, ```mongo```, ```xdebug```, ```zip```, ```xml```, ```mbstring```, ```curl```, ```json```, ```mysql``` and ```tokenizer``` extensions
 - [Composer](https://getcomposer.org/)
-- [Deployer](https://github.com/deployphp/deployer)
+- [Yarn](https://yarnpkg.com)
 - Node / NPM / Gulp
