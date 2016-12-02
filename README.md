@@ -10,4 +10,4 @@
 - PHP 7.0 with: ```mcrypt```, ```mongo```, ```xdebug```, ```zip```, ```xml```, ```mbstring```, ```curl```, ```json```, ```mysql``` and ```tokenizer``` extensions
 - [Composer](https://getcomposer.org/)
 - [Yarn](https://yarnpkg.com)
-- Node / NPM / Gulp
+- Node 6.x / NPM / Gulp
