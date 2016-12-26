@@ -48,7 +48,20 @@ RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
 RUN add-apt-repository -y ppa:ondrej/php && \
     DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq php-pear php7.0-dev php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli php7.0-imap php7.0-gd && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
+    php-pear \
+    php7.0-dev \
+    php7.0-mcrypt \
+    php7.0-zip \
+    php7.0-xml \
+    php7.0-mbstring \
+    php7.0-curl \
+    php7.0-json \
+    php7.0-mysql \
+    php7.0-tokenizer \
+    php7.0-cli \
+    php7.0-imap \
+    php7.0-gd && \
     DEBIAN_FRONTEND=noninteractive apt-get remove --purge php5 php5-common
 
 # MONGO extension
