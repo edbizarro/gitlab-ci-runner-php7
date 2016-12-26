@@ -37,7 +37,7 @@ RUN mkdir -p /usr/local/openssl/include/openssl/ && \
     ln -s /usr/lib/x86_64-linux-gnu/libssl.so /usr/local/openssl/lib/
 
 # NODE JS
-RUN curl -sL https://deb.nodesource.com/setup_6.x | bash - && \
+RUN curl -sL https://deb.nodesource.com/setup_7.x | bash - && \
     apt-get install nodejs -qq && \
     npm install -g gulp
 
@@ -48,7 +48,7 @@ RUN curl -o- -L https://yarnpkg.com/install.sh | bash
 
 RUN add-apt-repository -y ppa:ondrej/php && \
     DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq php-pear php7.0-dev php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli php7.0-imap && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y -qq php-pear php7.0-dev php7.0-mcrypt php7.0-zip php7.0-xml php7.0-mbstring php7.0-curl php7.0-json php7.0-mysql php7.0-tokenizer php7.0-cli php7.0-imap php7.0-gd && \
     DEBIAN_FRONTEND=noninteractive apt-get remove --purge php5 php5-common
 
 # MONGO extension
@@ -85,8 +85,6 @@ WORKDIR /tmp
 # Run phpunit installation.
 RUN composer selfupdate && \
     composer global require hirak/prestissimo --prefer-dist --no-interaction && \
-    composer require "phpunit/phpunit" --prefer-dist --no-interaction && \
-    ln -s /tmp/vendor/bin/phpunit /usr/local/bin/phpunit && \
     rm -rf /root/.composer/cache/*
 
 RUN apt-get clean -y && apt-get --purge autoremove -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
