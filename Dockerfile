@@ -3,7 +3,8 @@ FROM ubuntu:16.04
 MAINTAINER Eduardo Bizarro <edbizarro@gmail.com>
 
 # Set correct environment variables
-ENV HOME /root
+ENV HOME="/root" \
+    PATH="~/.yarn/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
 
 # Ensure UTF-8
 RUN locale-gen en_US.UTF-8
