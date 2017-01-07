@@ -62,8 +62,9 @@ RUN add-apt-repository -y ppa:ondrej/php && \
     php7.0-tokenizer \
     php7.0-cli \
     php7.0-imap \
-    php7.0-gd && \
-    DEBIAN_FRONTEND=noninteractive apt-get remove --purge php5 php5-common
+    php7.0-gd
+    
+RUN DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge php5 php5-common
 
 # MONGO extension
 RUN pecl install mongodb && \
@@ -92,9 +93,6 @@ ENV COMPOSER_HOME /root/composer
 
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Goto temporary directory.
-WORKDIR /tmp
 
 # Run phpunit installation.
 RUN composer selfupdate && \
