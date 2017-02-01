@@ -62,7 +62,8 @@ RUN add-apt-repository -y ppa:ondrej/php && \
     php7.0-tokenizer \
     php7.0-cli \
     php7.0-imap \
-    php7.0-gd
+    php7.0-gd && \
+    rm -r /var/lib/apt/lists/*
     
 RUN DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge php5 php5-common
 
@@ -98,4 +99,7 @@ RUN composer selfupdate && \
     composer global require hirak/prestissimo --prefer-dist --no-interaction && \
     rm -rf /root/.composer/cache/*
 
-RUN apt-get clean -y && apt-get --purge autoremove -y && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get remove --purge autoconf g++ make -y && \
+    apt-get autoclean -y && \
+    apt-get --purge autoremove -y && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
