@@ -11,9 +11,7 @@ RUN locale-gen en_US.UTF-8
 ENV LANG       en_US.UTF-8
 ENV LC_ALL     en_US.UTF-8
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get update && \
-    DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get dist-upgrade -y && \
+RUN DEBIAN_FRONTEND=noninteractive apt-get update && \    
     DEBIAN_FRONTEND=noninteractive apt-get install -y \
     software-properties-common \
     python-software-properties \
@@ -62,10 +60,10 @@ RUN add-apt-repository -y ppa:ondrej/php && \
     php7.0-tokenizer \
     php7.0-cli \
     php7.0-imap \
-    php7.0-gd && \
-    rm -r /var/lib/apt/lists/*
+    php7.0-gd \
+    --no-install-recommends && rm -r /var/lib/apt/lists/* && \        
+    apt-get --purge autoremove -y
     
-RUN DEBIAN_FRONTEND=noninteractive apt-get remove -y --purge php5 php5-common
 
 # MONGO extension
 RUN pecl install mongodb && \
